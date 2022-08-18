@@ -3,6 +3,7 @@ import click
 from datetime import datetime, timezone
 from typing import Optional
 
+from branch_detective.description import markdown_description
 from branch_detective.repository import RepositoryLens
 from branch_detective.compare import find_missing_by_message, find_missing_by_sha
 
@@ -59,12 +60,16 @@ branch.""")
     '-a', '--show-all', is_flag=True, default=False,
     help="automatically display all missing commits instead of paging"
 )
+@click.option(
+    '-m', '--markdown', is_flag=True, default=False,
+    help="create a markdown description from the commit messages"
+)
 @click.pass_context
 def main(
     ctx, source_branch: str, dest_branch: str,
     by_message: bool, ignore_merge: bool,
     since: str, before: str,
-    show_all: bool
+    show_all: bool, markdown: bool
 ):
     try:
         since_dt: Optional[datetime] = verify_date(since, '--since')
@@ -97,6 +102,13 @@ def main(
             source_log, dest_log, ignore_merge=ignore_merge,
             since=since_dt, before=before_dt
         )
+
+    if markdown:
+        overwrite("")
+        click.echo(
+            markdown_description(missing)
+        )
+        return
 
     overwrite("Elementary, dear Watson!", nl=True)
 
