@@ -11,8 +11,13 @@ is the **destination** branch, which you're search through for the commits in.
 If a commit is present in source, but not in destination, that commit is
 considered "missing".
 
+If you don't specify the source, the current branch will be used, and if you don't
+specify the destination, the local copy of the default branch (e.g. `main`) will be
+used. Thus, `branch-detective` without any arguments will display the commits present
+in the current branch, but absent from `main`.
+
 To keep things simple, Branch Detective will not tell you about commits
-present in the desintation branch, but not in the source branch. To see these,
+present in the destination branch, but not in the source branch. To see these,
 rerun Branch Detective with the branches swapped.
 
 ## Search by Message or SHA
