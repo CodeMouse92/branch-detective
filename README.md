@@ -20,6 +20,17 @@ To keep things simple, Branch Detective will not tell you about commits
 present in the destination branch, but not in the source branch. To see these,
 rerun Branch Detective with the branches swapped.
 
+## Pretty PR Descriptions!
+
+You can output the list of commits in Markdown format, for copying and pasting
+as your Pull Request/Merge Request description. Just pass the `--markdown`
+or `-m` option.
+
+If all your commits consist either of a single line _or_ have a blank line between
+the header line and the body of the commit, then the first line will be formatted
+as a heading 2 (`## like this`). If your commits don't follow this structure,
+horizontal rules with dashes will be used to separate commits instead (`-----`).
+
 ## Search by Message or SHA
 
 Different Git platforms handle your repository in different ways. In some,
