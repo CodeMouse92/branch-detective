@@ -8,7 +8,7 @@ class RepositoryLens:
     """Provides an interface to the repository in the current working
     directory."""
 
-    def __init__(self, source_branch: str, dest_branch: str):
+    def __init__(self, source_branch: str = '', dest_branch: str = ''):
         """Initializes a new RepositoryLens that works with the Git
         repository in the current working directory, and which specifically
         verifies and examines the source and destination branches specified
@@ -24,10 +24,22 @@ class RepositoryLens:
         except git.exc.InvalidGitRepositoryError:
             raise RuntimeError("This is not a valid Git repository.")
 
+        # use current branch if source is not specified
+        if source_branch == '':
+            source_branch = self.repo.active_branch.name
+
         # Verify the requested 'source' branch is valid.
         self.source_branch: str = source_branch
         if source_branch not in self.repo.heads:
             raise RuntimeError(f"Unknown source branch: {source_branch}")
+
+        # use default branch if dest is not specified
+        if dest_branch == '':
+            try:
+                default = [r.ref for r in self.repo.refs if r.name == 'origin/HEAD'][0]
+                dest_branch = default.name.split('/')[-1]
+            except IndexError as e:
+                raise RuntimeError(f"Could not determine default (origin/HEAD) branch.")
 
         # Verify the requested 'dest' branch is valid.
         self.dest_branch: str = dest_branch

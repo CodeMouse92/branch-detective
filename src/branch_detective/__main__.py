@@ -35,10 +35,12 @@ def verify_date(date: str, arg_name: str) -> Optional[datetime]:
 which commits are present on a SOURCE branch, but are absent from a DEST
 branch.""")
 @click.argument(
-    'source_branch'
+    'source_branch',
+    default=''
 )
 @click.argument(
-    'dest_branch'
+    'dest_branch',
+    default=''
 )
 @click.option(
     '--by-message/--by-sha', default=True,
@@ -83,6 +85,10 @@ def main(
 
     try:
         repo = RepositoryLens(source_branch, dest_branch)
+        # update branches to those detected by the repository
+        source_branch = repo.source_branch
+        dest_branch = repo.dest_branch
+        # get the commit logs
         source_log = repo.source_log
         dest_log = repo.dest_log
     except RuntimeError as e:
